@@ -100,6 +100,11 @@ Example command placeholder:
 python -m src.emb_dual.run_dual \
   --config configs/examples/example_dual_config.yaml
 ```
+## Firmaware
+Notes: **The direction of rotation (clockwise or counterclockwise) can be configured in the firmware. By default, the eMB is set to clockwise rotation. If required, rotation direction can be inverted by changing the \code{rotation\_direction} parameter from \code{CW} to \code{CCW}. 
+
+
+This inverts the computed angle in firmware after applying the device offset but before streaming. Practically, this can be implemented by computing the aligned angle in the 0--360° range (for example \code{angle = fmod(readAngleDegree() - value\_offset\_zero + 360.0, 360.0)} and then replacing the streamed value with its mirror angle (\code{angle = fmod(360.0 - angle + 360.0, 360.0)}) when counter-clockwise behavior is required. After changing the mapping, the zero reference (\code{value\_offset\_zero}) needs to be verified or updated accordingly per device so remains correct.**
 
 ## Using the eMB solo code
 
