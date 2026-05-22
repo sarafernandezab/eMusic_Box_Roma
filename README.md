@@ -1,53 +1,219 @@
-# eMusic Box (eMB) Roma Methodological Paper Code and Data
+# eMusic Box (eMB) Roma — Repository
 
-This repository contains the code, Max/MSP patch resources, supplementary scripts, example data, and experiment configuration files associated with the methodological paper:
+This repository contains the firmware, software, printable hardware files, musical stimuli, supplementary scripts, and configuration resources associated with the methodological paper:
 
-> The e-Music Box Roma: An open instrument for accessible music making
-> Sara F. Abalde, Félix Bigand, Lorenzo Orciari, Claudio Lorini, Peter E. Keller, Alberto Parmiggiani, Marco Crepaldi, Giacomo Novembre
+> *The e-Music Box Roma: An open instrument for accessible music making*  
+> Sara F. Abalde, Félix Bigand, Lorenzo Orciari, Claudio Lorini, Peter E. Keller, Alberto Parmiggiani, Marco Crepaldi, Giacomo Novembre  
 > [Journal/conference/preprint link here]  
 > DOI: [DOI here]
 
-## Repository overview
+---
+
+# Repository Overview
 
 ```text
 .
-├── src/
-│   ├── emb_dual/                  # Code for the eMB dual method/system
-│   └── emb_solo/                  # Code for the eMB solo method/system
-├── max_msp/
-│   └── emb_solo_patch/            # Max/MSP patch and all required folders
-│       ├── patchers/              # Main and auxiliary .maxpat files
-│       ├── media/                 # Audio/media assets required by the patch
-│       ├── externals/             # External Max objects, if redistributable
-│       └── docs/                  # Patch-specific notes and screenshots
+├── hardware/
+│   └── stl/
+│       ├── enclosure/
+│       ├── gears/
+│       └── README.md                 # Printing instructions for the eMB
+│
+├── firmware/
+│   ├── emb_solo/
+│   └── emb_dual/
+│
+├── software/
+│   ├── max_msp/
+│   │   ├── emb_solo/
+│   │   │   ├── patchers/
+│   │   │   ├── media/
+│   │   │   ├── externals/
+│   │   │   └── docs/
+│   │   │
+│   │   └── emb_dual/
+│   │       ├── patchers/
+│   │       ├── media/
+│   │       ├── externals/
+│   │       └── docs/
+│   │
+│   └── python/
+│       ├── emb_solo/
+│       └── emb_dual/
+│
+├── musical_stimuli/
+│   ├── midi/                         # Original MIDI files
+│   ├── text_converted_midis/         # MIDI-like converted text formats for eMB
+│   └── conversion_scripts/
+│       └── midi_conversion_tools.py
+│
 ├── supplementary/
-│   └── python/                    # Supplementary Python scripts, e.g. data creation
-├── data/
-│   ├── midi/                      # Original MIDI files
-│   ├── emb_ready/                 # MIDI-like files prepared for eMB
-│   └── example_trials/            # Example trial files for testing/reproduction
+│   ├── config_generation/
+│   │   └── create_configs.py
+│   ├── utilities/
+│   └── analysis/
+│
 ├── configs/
-│   ├── experiments/               # Experiment configuration files
-│   └── examples/                  # Minimal example configs
-├── docs/                          # Extended documentation
-├── scripts/                       # Utility scripts for setup/checks
-└── tests/                         # Lightweight tests or validation checks
+│   ├── experiments/
+│   └── examples/
+│
+├── docs/
+│
+├── scripts/
+│
+├── tests/
+│
+├── requirements.txt
+└── README.md
 ```
 
-## What is included
+---
 
-| Component | Description |
+# Repository Components
+
+| Folder | Description |
 |---|---|
-| `src/emb_dual/` | Implementation of the eMB dual system. |
-| `src/emb_solo/` | Implementation of the eMB solo system. |
-| `max_msp/emb_solo_patch/` | Max/MSP implementation for eMB solo, including patchers and required subfolders. |
-| `supplementary/python/` | Scripts used to generate, transform, or inspect supplementary data. |
-| `data/midi/` | Source MIDI files used in the examples or experiments. |
-| `data/emb_ready/` | MIDI-like files already converted/prepared for eMB. |
-| `data/example_trials/` | Example trials for testing the workflow without running the full experiment. |
-| `configs/experiments/` | Experiment configuration files used in the paper. |
+| `hardware/stl/` | STL files for 3D printing the eMusic Box (eMB) hardware components. |
+| `firmware/` | Firmware for operating the eMB hardware in solo or dual configurations. |
+| `software/max_msp/` | Max/MSP projects for running the eMB in solo or dual interaction modes. |
+| `software/python/` | Python-based implementations or support scripts for eMB operation. |
+| `musical_stimuli/midi/` | Original MIDI files used in experiments and demonstrations. |
+| `musical_stimuli/text_converted_midis/` | MIDI files converted into text-based formats compatible with the eMB workflow. |
+| `musical_stimuli/conversion_scripts/` | Python scripts used to convert MIDI files into eMB-compatible formats. |
+| `supplementary/config_generation/` | Scripts used to automatically generate experiment configuration files. |
+| `supplementary/utilities/` | Additional utility scripts supporting repository workflows. |
+| `configs/` | Example and experiment configuration files. |
+| `docs/` | Extended documentation, screenshots, diagrams, and setup notes. |
 
-## Quick start
+---
+
+# 3D Printing the eMB
+
+The STL files required to print the eMusic Box (eMB) are located in:
+
+```text
+hardware/stl/
+```
+
+These files contain the printable mechanical components of the instrument, including enclosure parts and mechanical transmission elements.
+
+Printing recommendations, assembly notes, and hardware-specific instructions can be included in:
+
+```text
+hardware/stl/README.md
+```
+
+---
+
+# Firmware
+
+The firmware source code is located in:
+
+```text
+firmware/
+```
+
+Separate folders are provided for:
+
+- `emb_solo/` — solo interaction mode
+- `emb_dual/` — dual interaction mode
+
+## Firmware Notes
+
+> The direction of rotation (clockwise or counterclockwise) can be configured in the firmware. By default, the eMB is set to clockwise rotation.
+
+---
+
+# Software
+
+The software resources are located in:
+
+```text
+software/
+```
+
+Two software approaches can be included:
+
+## Max/MSP
+
+Located in:
+
+```text
+software/max_msp/
+```
+
+Includes:
+
+- Max/MSP patches
+- media assets
+- external objects
+- patch documentation
+
+Separate projects can be maintained for:
+
+- solo performance
+- dual performance
+
+## Python
+
+Located in:
+
+```text
+software/python/
+```
+
+Optional Python implementations or support tools for the eMB system.
+
+---
+
+# Musical Stimuli
+
+The musical stimuli resources are located in:
+
+```text
+musical_stimuli/
+```
+
+This section contains:
+
+- original MIDI stimuli
+- text-converted MIDI representations
+- scripts used for conversion and preprocessing
+
+Example structure:
+
+```text
+musical_stimuli/
+├── midi/
+├── text_converted_midis/
+└── conversion_scripts/
+```
+
+---
+
+# Supplementary Scripts
+
+Supplementary scripts are located in:
+
+```text
+supplementary/
+```
+
+These include:
+
+- configuration generation tools
+- utility scripts
+- analysis scripts
+
+Example:
+
+```bash
+python supplementary/config_generation/create_configs.py
+```
+
+---
+
+# Quick Start
 
 Clone the repository:
 
@@ -62,46 +228,30 @@ Create a Python environment:
 python -m venv .venv
 source .venv/bin/activate      # macOS/Linux
 # .venv\Scripts\activate       # Windows
+
 pip install -r requirements.txt
 ```
 
-Run a basic repository check:
+Run a repository check:
 
 ```bash
 python scripts/check_repository.py
 ```
 
-Run an example supplementary script:
+---
 
-```bash
-python supplementary/python/create_example_emb_ready_file.py \
-  --input data/midi/example.mid \
-  --output data/emb_ready/example_emb_ready.csv
-```
+# Citation
 
-## Using the eMB dual code
+If you use this repository, please cite:
 
-The eMB dual code is located in:
-
-```text
-src/emb_dual/
-```
-
-Recommended workflow:
-
-1. Place or select the relevant input files from `data/midi/` or `data/emb_ready/`.
-2. Select an experiment configuration from `configs/experiments/`.
-3. Run the main eMB dual script or notebook.
-4. Save generated outputs outside the repository or in an ignored `outputs/` directory.
-
-Example command placeholder:
-
-```bash
-python -m src.emb_dual.run_dual \
-  --config configs/examples/example_dual_config.yaml
-```
-## Firmaware
-Notes: **The direction of rotation (clockwise or counterclockwise) can be configured in the firmware. By default, the eMB is set to clockwise rotation. If required, rotation direction can be inverted by changing the \code{rotation\_direction} parameter from \code{CW} to \code{CCW}. 
+```bibtex
+@article{emb_roma,
+  title={The e-Music Box Roma: An open instrument for accessible music making},
+  author={Abalde, Sara F. and Bigand, Félix and Orciari, Lorenzo and others},
+  journal={...},
+  year={2026}
+}
+```required, rotation direction can be inverted by changing the \code{rotation\_direction} parameter from \code{CW} to \code{CCW}. 
 
 
 This inverts the computed angle in firmware after applying the device offset but before streaming. Practically, this can be implemented by computing the aligned angle in the 0--360° range (for example \code{angle = fmod(readAngleDegree() - value\_offset\_zero + 360.0, 360.0)} and then replacing the streamed value with its mirror angle (\code{angle = fmod(360.0 - angle + 360.0, 360.0)}) when counter-clockwise behavior is required. After changing the mapping, the zero reference (\code{value\_offset\_zero}) needs to be verified or updated accordingly per device so remains correct.**
