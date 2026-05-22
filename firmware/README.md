@@ -1,6 +1,6 @@
 # eMB Roma Firmware
 
-This folder contains the Arduino firmware used to operate the eMusic Box Roma (eMB Roma).
+This folder contains the Arduino firmware (eMB_firmware.ino) used to operate the eMusic Box Roma after assembly.
 
 The firmware acquires:
 
