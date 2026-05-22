@@ -1,197 +1,188 @@
-# eMusic Box (eMB) Roma — Repository
+# eMusic Box Roma (eMB Roma)
 
-This repository contains the firmware, software, printable hardware files, musical stimuli, supplementary scripts, and configuration resources associated with the methodological paper:
+This repository contains the open-source hardware files, firmware, Max/MSP control patches, musical stimuli, configuration files, and supplementary Python scripts associated with the methodological paper:
 
 > *The e-Music Box Roma: An open instrument for accessible music making*  
 > Sara F. Abalde, Félix Bigand, Lorenzo Orciari, Claudio Lorini, Peter E. Keller, Alberto Parmiggiani, Marco Crepaldi, Giacomo Novembre  
 > [Journal/conference/preprint link here]  
 > DOI: [DOI here]
 
+The eMusic Box Roma (eMB Roma) is an open instrument for accessible music making. It combines a 3D-printed rotary interface, embedded electronics, custom firmware, and Max/MSP software for interactive musical stimulus presentation and experimental control. The system supports both solo and dual use.
+
 ---
 
-# Repository Overview
+## Repository structure
 
 ```text
 .
 ├── hardware/
 │   └── stl/
-│       ├── enclosure/
-│       ├── gears/
-│       └── README.md                 # Printing instructions for the eMB
+│       ├── rotary_disk_group/
+│       ├── cover_group/
+│       ├── base_group/
+│       └── README.md
 │
 ├── firmware/
-│   ├── emb_solo/
-│   └── emb_dual/
+│   └── emb_firmware/
 │
 ├── software/
-│   ├── max_msp/
-│   │   ├── emb_solo/
-│   │   │   ├── patchers/
-│   │   │   ├── media/
-│   │   │   ├── externals/
-│   │   │   └── docs/
-│   │   │
-│   │   └── emb_dual/
-│   │       ├── patchers/
-│   │       ├── media/
-│   │       ├── externals/
-│   │       └── docs/
-│   │
-│   └── python/
+│   └── max_msp/
 │       ├── emb_solo/
 │       └── emb_dual/
 │
 ├── musical_stimuli/
-│   ├── midi/                         # Original MIDI files
-│   ├── text_converted_midis/         # MIDI-like converted text formats for eMB
+│   ├── midi/
+│   ├── midi_derived_text/
 │   └── conversion_scripts/
-│       └── midi_conversion_tools.py
+│
+├── configs/
+│   ├── global/
+│   └── experiments/
 │
 ├── supplementary/
 │   ├── config_generation/
-│   │   └── create_configs.py
 │   ├── utilities/
 │   └── analysis/
 │
-├── configs/
-│   ├── experiments/
-│   └── examples/
-│
 ├── docs/
-│
 ├── scripts/
-│
 ├── tests/
-│
 ├── requirements.txt
 └── README.md
 ```
 
 ---
 
-# Repository Components
+## Hardware design and construction
+
+The `hardware/stl/` folder contains the open-source STL files required to fabricate the eMB Roma enclosure and mechanical components.
+
+The mechanical design is organized according to the three main structural groups described in the paper:
 
 | Folder | Description |
 |---|---|
-| `hardware/stl/` | STL files for 3D printing the eMusic Box (eMB) hardware components. |
-| `firmware/` | Firmware for operating the eMB hardware in solo or dual configurations. |
-| `software/max_msp/` | Max/MSP projects for running the eMB in solo or dual interaction modes. |
-| `software/python/` | Python-based implementations or support scripts for eMB operation. |
-| `musical_stimuli/midi/` | Original MIDI files used in experiments and demonstrations. |
-| `musical_stimuli/text_converted_midis/` | MIDI files converted into text-based formats compatible with the eMB workflow. |
-| `musical_stimuli/conversion_scripts/` | Python scripts used to convert MIDI files into eMB-compatible formats. |
-| `supplementary/config_generation/` | Scripts used to automatically generate experiment configuration files. |
-| `supplementary/utilities/` | Additional utility scripts supporting repository workflows. |
-| `configs/` | Example and experiment configuration files. |
-| `docs/` | Extended documentation, screenshots, diagrams, and setup notes. |
+| `hardware/stl/rotary_disk_group/` | STL files for the rotary disk assembly, including the disk that supports the rotating handle. |
+| `hardware/stl/cover_group/` | STL files for the cover group, including components that support the bearing and disk alignment. |
+| `hardware/stl/base_group/` | STL files for the base group, including placeholders for the microcontroller, magnetic rotary encoder, USB connector, and feet. |
+| `hardware/stl/README.md` | Printing and assembly notes for fabricating the eMB Roma. |
+
+The STL files correspond to the printable components of the eMB Roma. In the implementation described in the paper, parts were printed in Nylon PA 6-6, although other materials may be used depending on experimental or fabrication constraints.
+
+Additional non-printed mechanical components include the rotating handle, ball bearing, ferrite ring, and self-tapping screws. Assembly details, screw sizes, and component placement should be documented in `hardware/stl/README.md`.
 
 ---
 
-# 3D Printing the eMB
+## Electronic architecture
 
-The STL files required to print the eMusic Box (eMB) are located in:
+The eMB Roma integrates:
 
-```text
-hardware/stl/
-```
+- a magnetic rotary encoder for measuring disk rotation,
+- a linear slider,
+- a push button,
+- and a microcontroller for data acquisition and USB communication.
 
-These files contain the printable mechanical components of the instrument, including enclosure parts and mechanical transmission elements.
+The firmware and software assume that all input signals are streamed from the microcontroller to the core computer through a serial connection over USB.
 
-Printing recommendations, assembly notes, and hardware-specific instructions can be included in:
-
-```text
-hardware/stl/README.md
-```
+Hardware-specific wiring diagrams, component lists, and assembly notes can be placed in `docs/`.
 
 ---
 
-# Firmware
+## Firmware and data communication
 
-The firmware source code is located in:
+The firmware is located in:
 
 ```text
-firmware/
+firmware/emb_firmware/
 ```
 
-Separate folders are provided for:
+The firmware is uploaded to the microcontroller during initial device setup. During routine use, it reads:
 
-- `emb_solo/` — solo interaction mode
-- `emb_dual/` — dual interaction mode
+- rotary angle from the magnetic rotary encoder,
+- slider position from the linear potentiometer,
+- push button state from the digital input.
 
-## Firmware Notes
+These values are streamed to the core computer through a serial COM port using ASCII-encoded messages.
 
-> The direction of rotation (clockwise or counterclockwise) can be configured in the firmware. By default, the eMB is set to clockwise rotation.
+The firmware includes device-specific calibration parameters. In particular, the angular zero position can be adjusted using the `value_offset_zero` parameter. This corrects for small differences in encoder and magnet alignment after assembly.
+
+The direction of rotation can also be configured in the firmware. By default, the eMB Roma is set to clockwise rotation. This can be inverted by changing the `rotation_direction` parameter from `CW` to `CCW`. After changing the rotation direction, the zero-reference parameter may need to be verified or adjusted.
+
+Once the firmware has been uploaded and calibration is complete, the Arduino environment should be closed so that the serial port is available to the Max/MSP control patch.
 
 ---
 
-# Software
+## Software architecture and experimental control
 
-The software resources are located in:
-
-```text
-software/
-```
-
-Two software approaches can be included:
-
-## Max/MSP
-
-Located in:
+The Max/MSP software is located in:
 
 ```text
 software/max_msp/
 ```
 
-Includes:
+Two ready-to-use Max/MSP projects are provided:
 
-- Max/MSP patches
-- media assets
-- external objects
-- patch documentation
+| Folder | Description |
+|---|---|
+| `software/max_msp/emb_solo/` | Max/MSP patch for solo eMB use. |
+| `software/max_msp/emb_dual/` | Max/MSP patch for dual eMB use. |
 
-Separate projects can be maintained for:
+The Max/MSP patch provides a graphical interface for:
 
-- solo performance
-- dual performance
-
-## Python
-
-Located in:
-
-```text
-software/python/
-```
-
-Optional Python implementations or support tools for the eMB system.
+- loading configuration files,
+- selecting musical stimuli,
+- assigning instruments to eMB devices,
+- receiving serial data from the eMB,
+- mapping rotational position to musical events,
+- playing MIDI output streams,
+- logging behavioral and musical data,
+- and sending optional synchronization triggers to external systems.
 
 ---
 
-# Musical Stimuli
+## Configuration files
 
-The musical stimuli resources are located in:
+Configuration files are located in:
+
+```text
+configs/
+```
+
+The software uses two main types of configuration files:
+
+| Folder | Description |
+|---|---|
+| `configs/global/` | Global configuration files containing setup-wide parameters such as COM ports, sampling rate, stimulus paths, output paths, instrument assignments, metronome settings, and optional trigger settings. |
+| `configs/experiments/` | Trial-specific experiment configuration files, with one row per trial. These files define parameters such as trial number, condition, song, number of bars, instrument assignment, metronome tempo, and number of metronome beats. |
+
+Configuration files are plain-text files and can be generated automatically using the supplementary Python scripts.
+
+---
+
+## Musical stimuli
+
+Musical stimuli are located in:
 
 ```text
 musical_stimuli/
 ```
 
-This section contains:
+The eMB Roma uses MIDI-derived text files that can be read by the Max/MSP patch and synchronized with the rotational position of the device.
 
-- original MIDI stimuli
-- text-converted MIDI representations
-- scripts used for conversion and preprocessing
+| Folder | Description |
+|---|---|
+| `musical_stimuli/midi/` | Original MIDI files. |
+| `musical_stimuli/midi_derived_text/` | Text-based MIDI-derived stimulus files used by the Max/MSP patch. |
+| `musical_stimuli/conversion_scripts/` | Python scripts for converting MIDI files into eMB-compatible text files. |
 
-Example structure:
+By default, one full rotation of the eMB corresponds to one musical bar divided into 16 equally spaced steps, matching the sixteenth-note structure of a 4/4 bar. Each row of a MIDI-derived text file represents a discrete temporal frame. Notes are encoded using MIDI-style values such as pitch, velocity, and duration.
 
-```text
-musical_stimuli/
-├── midi/
-├── text_converted_midis/
-└── conversion_scripts/
-```
+Polyphonic stimuli are supported by including multiple note triplets in the same temporal frame. Frames without musical events are represented as silence.
+
+The conversion scripts support batch conversion of MIDI files and can extract metadata such as tempo and bar count. If a MIDI file contains multiple instruments, the instrumental parts should be separated before conversion, with filenames indicating the corresponding instrument.
 
 ---
 
-# Supplementary Scripts
+## Supplementary Python scripts
 
 Supplementary scripts are located in:
 
@@ -199,11 +190,13 @@ Supplementary scripts are located in:
 supplementary/
 ```
 
-These include:
+These scripts support reproducible preparation of files used by the eMB Roma system.
 
-- configuration generation tools
-- utility scripts
-- analysis scripts
+| Folder | Description |
+|---|---|
+| `supplementary/config_generation/` | Python scripts for generating global and experiment configuration files. |
+| `supplementary/utilities/` | Additional utility scripts for preparing or checking repository resources. |
+| `supplementary/analysis/` | Optional scripts for inspecting or analyzing output files. |
 
 Example:
 
@@ -213,13 +206,55 @@ python supplementary/config_generation/create_configs.py
 
 ---
 
-# Quick Start
+## Trial execution and data output
+
+During a trial, the Max/MSP patch receives the continuous angular position of each eMB and discretizes it into temporal bins. The discretized within-bar position is combined with the completed rotation count to determine the absolute position in the musical sequence. This absolute position is then used to trigger the corresponding MIDI-derived musical event.
+
+For each completed trial, the Max/MSP patch can save:
+
+1. a raw text data file containing timestamped eMB data,
+2. a MIDI file containing the musical output streams,
+3. and, when enabled, a summary log file.
+
+The raw text data file contains the main behavioral data used for analysis, including angular position, discretized musical position, rotation cycle count, and instrument information for each connected eMB.
+
+---
+
+## Synchronization with external devices
+
+The Max/MSP patch can optionally send synchronization triggers through COM ports. These triggers can mark events such as trial onset, trial offset, or predefined rhythmic positions.
+
+This feature is intended for synchronization with external recording systems such as EEG, motion capture, or other multimodal acquisition devices.
+
+---
+
+## Example use cases
+
+The eMB Roma supports different experimental and musical configurations along two main dimensions:
+
+1. **Musical complexity**  
+   The system can be configured for monophonic or polyphonic playback, single or multiple instruments, identical or complementary musical streams, and optional real-time parameter modulation through the linear slider.
+
+2. **Social configuration**  
+   The system supports solo use with one eMB and dual use with two eMBs. The repository provides separate Max/MSP patches for these two validated configurations.
+
+Example dual-use configurations include:
+
+- **Unison duet**: both eMBs play the same instrument and musical sequence.
+- **Counterpoint duet**: the eMBs play different but complementary musical lines.
+- **Band-like duet**: one eMB controls melodic streams while the other controls rhythmic or harmonic streams.
+
+Multi-user setups beyond two devices may be possible with additional software and synchronization development, but they are not included as ready-to-use configurations in this repository.
+
+---
+
+## Quick start
 
 Clone the repository:
 
 ```bash
-git clone https://github.com/YOUR-USERNAME/YOUR-REPOSITORY.git
-cd YOUR-REPOSITORY
+git clone https://github.com/sarafernandezab/eMusic_Box_Roma.git
+cd eMusic_Box_Roma
 ```
 
 Create a Python environment:
@@ -232,15 +267,37 @@ source .venv/bin/activate      # macOS/Linux
 pip install -r requirements.txt
 ```
 
-Run a repository check:
+Upload the firmware to the microcontroller using the Arduino environment.
 
-```bash
-python scripts/check_repository.py
+Then open the appropriate Max/MSP project:
+
+```text
+software/max_msp/emb_solo/
 ```
+
+or:
+
+```text
+software/max_msp/emb_dual/
+```
+
+Load the global and experiment configuration files from `configs/`, then select the desired musical stimuli from `musical_stimuli/midi_derived_text/`.
 
 ---
 
-# Citation
+## Dependencies
+
+The repository may require:
+
+- Arduino IDE or compatible Arduino development environment,
+- AS5047P Arduino library,
+- Max 8 or later,
+- Python 3,
+- Python libraries listed in `requirements.txt`.
+
+---
+
+## Citation
 
 If you use this repository, please cite:
 
@@ -251,105 +308,4 @@ If you use this repository, please cite:
   journal={...},
   year={2026}
 }
-```required, rotation direction can be inverted by changing the \code{rotation\_direction} parameter from \code{CW} to \code{CCW}. 
-
-
-This inverts the computed angle in firmware after applying the device offset but before streaming. Practically, this can be implemented by computing the aligned angle in the 0--360° range (for example \code{angle = fmod(readAngleDegree() - value\_offset\_zero + 360.0, 360.0)} and then replacing the streamed value with its mirror angle (\code{angle = fmod(360.0 - angle + 360.0, 360.0)}) when counter-clockwise behavior is required. After changing the mapping, the zero reference (\code{value\_offset\_zero}) needs to be verified or updated accordingly per device so remains correct.**
-
-## Using the eMB solo code
-
-The eMB solo code is located in:
-
-```text
-src/emb_solo/
 ```
-
-Example command placeholder:
-
-```bash
-python -m src.emb_solo.run_solo \
-  --config configs/examples/example_solo_config.yaml
-```
-
-## Using the Max/MSP eMB solo patch
-
-The Max/MSP patch is located in:
-
-```text
-max_msp/emb_solo_patch/
-```
-
-Suggested organization:
-
-```text
-max_msp/emb_solo_patch/
-├── patchers/      # Main .maxpat patch and abstractions
-├── media/         # Required sound/media files
-├── externals/     # External dependencies, if license permits redistribution
-└── docs/          # Patch-specific documentation
-```
-
-To use the patch:
-
-1. Open Max/MSP.
-2. Add `max_msp/emb_solo_patch/` to the Max file path.
-3. Open the main patch in `max_msp/emb_solo_patch/patchers/`.
-4. Check the dependency notes in `max_msp/emb_solo_patch/docs/MAX_MSP_PATCH_NOTES.md`.
-5. Load one of the example trial/configuration files from `data/example_trials/` or `configs/examples/`.
-
-If external objects are required but cannot be redistributed, list them in `max_msp/emb_solo_patch/docs/MAX_MSP_PATCH_NOTES.md` with installation links or package names.
-
-## Data
-
-The repository separates original and derived data:
-
-```text
-data/midi/          # Original MIDI files
-data/emb_ready/     # Prepared MIDI-like files for eMB
-data/example_trials/# Example trial data
-```
-
-Large data files should not be committed directly to GitHub. For large datasets, use one of the following:
-
-- Git LFS
-- Zenodo, OSF, Figshare, or institutional repository
-- A release asset attached to the GitHub repository
-
-Document large external files in `data/README.md`.
-
-## Reproducing paper examples
-
-A minimal reproduction workflow should use:
-
-```text
-configs/examples/
-data/example_trials/
-supplementary/python/
-```
-
-Recommended command placeholder:
-
-```bash
-python supplementary/python/create_example_emb_ready_file.py \
-  --input data/midi/example.mid \
-  --output data/emb_ready/example_emb_ready.csv
-```
-
-## Citation
-
-If you use this repository, please cite the paper and this code repository.
-
-See [`CITATION.cff`](CITATION.cff).
-
-## License
-
-Code license: see [`LICENSE`](LICENSE).  
-Data license: specify in [`data/README.md`](data/README.md).
-
-## Contact
-
-For questions, contact:
-
-- [Name]
-- [Email]
-- [Institution]
