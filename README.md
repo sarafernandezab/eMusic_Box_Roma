@@ -279,4 +279,4 @@ For questions, bug reports, or suggestions regarding the eMB Roma system, please
 **Sara Fernández Abalde**  
 sara.abalde@iit.it
 
-Please include "eMB Roma Max/MSP" in the subject line when reporting issues.
+Please include "eMB Roma" in the subject line when reporting issues.
