@@ -21,20 +21,18 @@ Both projects share the same software architecture and functionality as describe
 ```text
 solo_eMB_maxMSP/
 │
-├── main.maxpat
-├── config/
-├── stimuli/
-├── logs/
-└── midi/
+├── eMB_solo_.maxpat
+├── data/
+├── other/
+└── patchers/
 
 
 dual_eMB_maxMSP/
 │
-├── main.maxpat
-├── config/
-├── stimuli/
-├── logs/
-└── midi/
+├── eMB_dual_.maxpat
+├── data/
+├── other/
+└── patchers/
 ```
 
 ---
@@ -72,9 +70,9 @@ Both versions support:
 
 3. Connect the eMB device(s)
 
-4. Start DSP/audio
+4. Start DSP/audio, and activate the patch data flow by pressing X.
 
-5. Press `Start Trial`
+5. After selecting the desired experiment, trial and song, press `Start Trial` in O
 
 ---
 
@@ -114,7 +112,7 @@ Stimuli are stored as MIDI-derived text files:
 
 Supported:
 
-* monophonic and polyphonic sequences
+* monophonic and polyphonic MIDI-derived sequences
 * multiple instruments
 * configurable mappings
 
@@ -136,26 +134,21 @@ Each trial generates:
 
 * Graphical user interface view with MaxMSP locked, for easier visualization and interaction with the eMB Roma. Press X to start the eMB connection and O to start a trial after loading the experimental configuration file and corresponding  trial (and song).
 
-```md
+
 ![GUI Overview locked](screenshots_MaxMSP/GUI_locked_maxMSP.png)
-```
+
 
 * View of hidden MaxMSP objects with unlocked view.
 
-```md
 ![GUI Overview unlocked](screenshots_MaxMSP/GUI_unlocked_maxMSP.png)
-```
 
 ---
 
 ### Configuration and initialization
 
-
-```md
-![Configuration and initialization](screenshots/config_init_.png)
-```
-
 Block for loading paths, instruments and other initialization variables. 
+
+![Configuration and initialization](screenshots_MaxMSP/config_init_.png)
 
 ---
 
@@ -163,18 +156,15 @@ Block for loading paths, instruments and other initialization variables.
 
 Block that receives the eMB data and processes it following the logic described in the manuscript section 'Trial execution and data flow'.
 
-```md
-![eMB data acquisition](screenshots/read_angle_from_emb.png)
-```
+![eMB data acquisition](screenshots_MaxMSP/read_angle_from_emb.png)
+
 ---
 
 ### Instrument mapping and playback
 
 Example block for instrument 1 illustrating the data flow for mapping the eMB data into MIDI playback.
 
-```md
-![Instrument mapping and playback](screenshots/read_angle_from_emb.png)
-```
+![Instrument mapping and playback](screenshots_MaxMSP/read_angle_from_emb.png)
 
 ---
 
@@ -182,27 +172,23 @@ Example block for instrument 1 illustrating the data flow for mapping the eMB da
 
 Block that saves the eMB data into the raw data text file.
 
-```md
-![Software Pipeline](screenshots/save_data_wcoll_text_out.png)
-```
+![Software Pipeline](screenshots_MaxMSP/save_data_wcoll_text_out.png)
+
 
 Block that saves the MIDI file with polyphony, with each instrument on a different channel.
 
-```md
-![Software Pipeline](screenshots/save_MIDI_w_polyphony.png)
-```
+![Software Pipeline](screenshots_MaxMSP/save_MIDI_w_polyphony.png)
+
 ---
 
 ### Synchronization with external devices
 
 Example blocks for detecting annd sending triggers to an EEG serial COM port. 
 
-```md
-![Detect triggers](screenshots/send_triggers_notes_metronome.png)
-```
-```md
-![Triggers to serial port](screenshots/eeg_triggers.png)
-```
+![Detect triggers](screenshots_MaxMSP/send_triggers_notes_metronome.png)
+
+![Triggers to serial port](screenshots_MaxMSP/eeg_triggers.png)
+
 ---
 
 ## Notes
