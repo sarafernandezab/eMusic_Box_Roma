@@ -15,24 +15,17 @@ The eMusic Box Roma (eMB Roma) is an open instrument for accessible music making
 ```text
 .
 ├── hardware/
-│   └── stl/
-│       ├── rotary_disk_group/
-│       ├── cover_group/
-│       ├── base_group/
-│       └── README.md
+│   └── 3D_printing_STL_files
 │
 ├── firmware/
-│   └── emb_firmware/
 │
 ├── software/
-│   └── max_msp/
-│       ├── emb_solo/
-│       └── emb_dual/
+│   ├── solo_eMB_MaxMSP/
+│   └── dual_eMB_MaxMSP/
 │
 ├── musical_stimuli/
-│   ├── midi/
-│   ├── midi_derived_text/
-│   └── conversion_scripts/
+│   ├── example_MIDI/
+│   └── example_MIDI_derived_text_eMB/
 │
 ├── configs/
 │   ├── global/
