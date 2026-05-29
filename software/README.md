@@ -183,7 +183,10 @@ Block that saves the MIDI file with polyphony, with each instrument on a differe
 
 ### Synchronization with external devices
 
-Example blocks for detecting annd sending triggers to an EEG serial COM port. 
+
+The Max/MSP patch can optionally send synchronization triggers through COM ports. These triggers can mark events such as trial onset, trial offset, or predefined rhythmic positions. This feature is intended for synchronization with external recording systems such as EEG, motion capture, or other multimodal acquisition devices.
+
+Screenshots below show example blocks for detecting and sending triggers to an EEG serial COM port. 
 
 ![Detect triggers](screenshots_MaxMSP/send_triggers_notes_metronome.png)
 
