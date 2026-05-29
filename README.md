@@ -2,10 +2,9 @@
 
 This repository contains the open-source hardware files, firmware, Max/MSP control patches, musical stimuli, configuration files, and supplementary Python scripts associated with the methodological paper:
 
-> *The e-Music Box Roma: An open instrument for accessible music making*  
-> Sara F. Abalde, Félix Bigand, Lorenzo Orciari, Claudio Lorini, Peter E. Keller, Alberto Parmiggiani, Marco Crepaldi, Giacomo Novembre  
-> [Journal/conference/preprint link here]  
-> DOI: [DOI here]
+> *The e-Music Box Roma: An open research tool for accessible joint music making*  
+> Sara F. Abalde, Félix Bigand, Lorenzo Orciari, Claudio Lorini, Peter E. Keller, Alberto Parmiggiani, Marco Crepaldi, Giacomo Novembre    
+
 
 The eMusic Box Roma (eMB Roma) is an open instrument for accessible music making. It combines a 3D-printed rotary interface, embedded electronics, custom firmware, and Max/MSP software for interactive musical stimulus presentation and experimental control. The system supports both solo and dual use.
 
@@ -41,13 +40,8 @@ The eMusic Box Roma (eMB Roma) is an open instrument for accessible music making
 │
 ├── supplementary/
 │   ├── config_generation/
-│   ├── utilities/
 │   └── analysis/
 │
-├── docs/
-├── scripts/
-├── tests/
-├── requirements.txt
 └── README.md
 ```
 
@@ -55,20 +49,13 @@ The eMusic Box Roma (eMB Roma) is an open instrument for accessible music making
 
 ## Hardware design and construction
 
-The `hardware/stl/` folder contains the open-source STL files required to fabricate the eMB Roma enclosure and mechanical components.
+The `hardware/3D_printing_STL_files/` folder contains the STL files required to fabricate the eMB Roma enclosure.
 
-The mechanical design is organized according to the three main structural groups described in the paper:
+The mechanical design is organized according to the three main structural groups described in the paper: base, cover, disk support, rotary disk and locking rings (both inner and outer).
 
-| Folder | Description |
-|---|---|
-| `hardware/stl/rotary_disk_group/` | STL files for the rotary disk assembly, including the disk that supports the rotating handle. |
-| `hardware/stl/cover_group/` | STL files for the cover group, including components that support the bearing and disk alignment. |
-| `hardware/stl/base_group/` | STL files for the base group, including placeholders for the microcontroller, magnetic rotary encoder, USB connector, and feet. |
-| `hardware/stl/README.md` | Printing and assembly notes for fabricating the eMB Roma. |
+The STL files correspond to the printable components of the eMB Roma illustrated in Figure 2. In the implementation described in the paper, parts were printed in Nylon PA 6-6, although other materials may be used depending on experimental or fabrication constraints.
 
-The STL files correspond to the printable components of the eMB Roma. In the implementation described in the paper, parts were printed in Nylon PA 6-6, although other materials may be used depending on experimental or fabrication constraints.
-
-Additional non-printed mechanical components include the rotating handle, ball bearing, ferrite ring, and self-tapping screws. Assembly details, screw sizes, and component placement should be documented in `hardware/stl/README.md`.
+Additional non-printed mechanical components include the rotating handle, ball bearing, ferrite ring, and self-tapping screws. Assembly details, screw sizes, and component placement are documented in the main paper.
 
 ---
 
@@ -83,7 +70,7 @@ The eMB Roma integrates:
 
 The firmware and software assume that all input signals are streamed from the microcontroller to the core computer through a serial connection over USB.
 
-Hardware-specific wiring diagrams, component lists, and assembly notes can be placed in `docs/`.
+Hardware-specific wiring diagrams, component lists, and assembly notes are documented in the paper.
 
 ---
 
@@ -92,10 +79,10 @@ Hardware-specific wiring diagrams, component lists, and assembly notes can be pl
 The firmware is located in:
 
 ```text
-firmware/emb_firmware/
+firmware/emb_firmware.ino
 ```
 
-The firmware is uploaded to the microcontroller during initial device setup. During routine use, it reads:
+The firmware needs to be uploaded to the microcontroller during initial device setup. During routine use, it reads:
 
 - rotary angle from the magnetic rotary encoder,
 - slider position from the linear potentiometer,
@@ -113,18 +100,12 @@ Once the firmware has been uploaded and calibration is complete, the Arduino env
 
 ## Software architecture and experimental control
 
-The Max/MSP software is located in:
-
-```text
-software/max_msp/
-```
-
-Two ready-to-use Max/MSP projects are provided:
+Two ready-to-use Max/MSP projects are provided, located in:
 
 | Folder | Description |
 |---|---|
-| `software/max_msp/emb_solo/` | Max/MSP patch for solo eMB use. |
-| `software/max_msp/emb_dual/` | Max/MSP patch for dual eMB use. |
+| `software/solo_eMB_MaxMSP/` | Max/MSP patch for solo eMB use. |
+| `software/dual_eMB_MaxMSP/` | Max/MSP patch for dual eMB use. |
 
 The Max/MSP patch provides a graphical interface for:
 
@@ -166,13 +147,12 @@ Musical stimuli are located in:
 musical_stimuli/
 ```
 
-The eMB Roma uses MIDI-derived text files that can be read by the Max/MSP patch and synchronized with the rotational position of the device.
+The eMB Roma uses MIDI-derived text files that can be read by the Max/MSP patch and synchronized with the rotational position of the device. The MIDI derived text are created from the original MIDI using the Python code provided in pipeline_convert_MIDI_to_eMBtxt.py.
 
 | Folder | Description |
 |---|---|
-| `musical_stimuli/midi/` | Original MIDI files. |
-| `musical_stimuli/midi_derived_text/` | Text-based MIDI-derived stimulus files used by the Max/MSP patch. |
-| `musical_stimuli/conversion_scripts/` | Python scripts for converting MIDI files into eMB-compatible text files. |
+| `musical_stimuli/example_MIDI/` | Original MIDI files separated by instrument. |
+| `musical_stimuli/example_MIDI_derived_text_eMB/` | Text-based MIDI-derived stimulus files used by the Max/MSP patch. |
 
 By default, one full rotation of the eMB corresponds to one musical bar divided into 16 equally spaced steps, matching the sixteenth-note structure of a 4/4 bar. Each row of a MIDI-derived text file represents a discrete temporal frame. Notes are encoded using MIDI-style values such as pitch, velocity, and duration.
 
@@ -220,13 +200,6 @@ The raw text data file contains the main behavioral data used for analysis, incl
 
 ---
 
-## Synchronization with external devices
-
-The Max/MSP patch can optionally send synchronization triggers through COM ports. These triggers can mark events such as trial onset, trial offset, or predefined rhythmic positions.
-
-This feature is intended for synchronization with external recording systems such as EEG, motion capture, or other multimodal acquisition devices.
-
----
 
 ## Example use cases
 
@@ -257,31 +230,21 @@ git clone https://github.com/sarafernandezab/eMusic_Box_Roma.git
 cd eMusic_Box_Roma
 ```
 
-Create a Python environment:
-
-```bash
-python -m venv .venv
-source .venv/bin/activate      # macOS/Linux
-# .venv\Scripts\activate       # Windows
-
-pip install -r requirements.txt
-```
-
 Upload the firmware to the microcontroller using the Arduino environment.
 
 Then open the appropriate Max/MSP project:
 
 ```text
-software/max_msp/emb_solo/
+software/solo_eMB_MaxMSP/
 ```
 
 or:
 
 ```text
-software/max_msp/emb_dual/
+software/dual_eMB_MaxMSP/
 ```
 
-Load the global and experiment configuration files from `configs/`, then select the desired musical stimuli from `musical_stimuli/midi_derived_text/`.
+Load the global and experiment configuration files from `configs/`, then select the desired musical stimuli from `musical_stimuli/example_MIDI_derived_text_eMB/` or create your own musical stimuli with the same format.
 
 ---
 
@@ -292,9 +255,8 @@ The repository may require:
 - Arduino IDE or compatible Arduino development environment,
 - AS5047P Arduino library,
 - Max 8 or later,
-- Python 3,
-- Python libraries listed in `requirements.txt`.
-
+- Python 3
+  
 ---
 
 ## Citation
@@ -303,9 +265,18 @@ If you use this repository, please cite:
 
 ```bibtex
 @article{emb_roma,
-  title={The e-Music Box Roma: An open instrument for accessible music making},
+  title={The e-Music Box Roma: An open reasearch tool for accessible joint music making},
   author={Abalde, Sara F. and Bigand, Félix and Orciari, Lorenzo and others},
   journal={...},
   year={2026}
 }
 ```
+
+## Contact
+
+For questions, bug reports, or suggestions regarding the eMB Roma system, please contact:
+
+**Sara Fernández Abalde**  
+sara.abalde@iit.it
+
+Please include "eMB Roma Max/MSP" in the subject line when reporting issues.
